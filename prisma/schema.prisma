@@ -13,3 +13,47 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum platform {
+  google
+  github
+  default
+}
+
+enum activeStatus {
+  loggedout
+  active
+}
+
+model user {
+  id                 String               @id() @default(uuid())
+  username           String
+  email              String
+  platform           platform
+  verified           Boolean              @default(false)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @default(now())
+  userSessionDevices userSessionDevices[]
+  loginCodes         loginCodes[]
+}
+
+model userSessionDevices {
+  id        String       @id() @default(uuid())
+  OS        String
+  ip        String
+  status    activeStatus
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @default(now())
+  user      user         @relation(fields: [userId], references: [id])
+  userId    String
+}
+
+model loginCodes {
+  id        String   @id() @default(uuid())
+  code      String
+  user      user     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  isExpired Boolean  @default(false)
+}
