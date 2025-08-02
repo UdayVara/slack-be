@@ -2,6 +2,32 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateUserInput {
+  email: String!
+  platform: Platform!
+  username: String!
+}
+
+type Mutation {
+  signinUser(signupdata: CreateUserInput!): UserEntity!
+  signupUser(signupdata: CreateUserInput!): UserEntity!
+}
+
+"""The platform enum from Prisma"""
+enum Platform {
+  default
+  github
+  google
+}
+
 type Query {
-  hello: String!
+  getUser: UserEntity!
+}
+
+type UserEntity {
+  email: String!
+  id: String!
+  platform: Platform!
+  username: String!
+  verified: Boolean!
 }
