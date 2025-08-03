@@ -1,0 +1,52 @@
+<!-- otp.ejs -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f5f7;
+        padding: 20px;
+      }
+      .container {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 30px;
+        max-width: 600px;
+        margin: auto;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        font-size: 24px;
+        color: #1264a3;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+      .otp-box {
+        background-color: #e8f5fd;
+        padding: 20px;
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        color: #0b5394;
+        border-radius: 6px;
+        margin: 20px 0;
+      }
+      .footer {
+        font-size: 14px;
+        color: #7a7a7a;
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">Your OTP Code</div>
+      <p>Hello <%= username %>,</p>
+      <p>Use the code below to sign in to your Slack-style app:</p>
+      <div class="otp-box"><%= otp %></div>
+      <p>This code will expire in 10 minutes.</p>
+      <div class="footer">If you didn’t request this, you can safely ignore this email.</div>
+    </div>
+  </body>
+</html>

@@ -2,10 +2,11 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { CreateUserInput } from './input/createUser.input';
 import { PrismaService } from 'src/common/Services/prisma.service';
 import { SigninUserInput } from './input/signinUser.input';
+import { MailService } from 'src/common/Services/mail.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService,private readonly mailService:MailService) {}
 
   async createUser(createUserInput: CreateUserInput) {
     try {
@@ -20,7 +21,7 @@ export class AuthService {
         })
 
         if(existingUser) {
-            throw new BadRequestException("User Already Exists")
+            throw new BadRequestException("User With Email Already Exists")
         }
 
         const user = await this.prisma.user.create({
@@ -32,7 +33,16 @@ export class AuthService {
         })
 
         // otp send code here
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
+        await this.prisma.loginCodes.create({
+            data:{
+                code:otp,
+                userId:user.id,
+                isExpired:false
+            }
+        })
+        this.mailService.sendOtpMail(user.email,user.username,otp)
         return {statusCode:200,message:"OTP Sent Successfully"}
     } catch (error) {
         console.log("createUser",error)
