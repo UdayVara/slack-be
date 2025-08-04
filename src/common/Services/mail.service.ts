@@ -18,7 +18,7 @@ export class MailService {
   }
 
   async sendOtpMail(to: string, username: string, otp: string) {
-    const templatePath = path.join(__dirname, 'templates', 'otp.ejs');
+    const templatePath = path.join(process.cwd(), 'src/templates', 'otp.template.ejs');
 
     const html = await ejs.renderFile(templatePath, { username, otp });
 

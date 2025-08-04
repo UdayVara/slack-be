@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AuthUserSuccessEntity {
+  message: String!
+  statusCode: Float!
+}
+
 input CreateUserInput {
   email: String!
   platform: Platform!
@@ -9,8 +14,8 @@ input CreateUserInput {
 }
 
 type Mutation {
-  signinUser(signupdata: CreateUserInput!): UserEntity!
-  signupUser(signupdata: CreateUserInput!): UserEntity!
+  signinUser(signindata: CreateUserInput!): AuthUserSuccessEntity!
+  signupUser(signupdata: CreateUserInput!): AuthUserSuccessEntity!
 }
 
 """The platform enum from Prisma"""

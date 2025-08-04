@@ -8,12 +8,12 @@ import { AuthUserSuccessEntity } from './entity/authUserSuccess.entity';
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => AuthUserSuccessEntity)
+  @Mutation(() => AuthUserSuccessEntity,{name:"signupUser"})
   async signupUser(@Args('signupdata') createUserInput: CreateUserInput) {
     return await this.authService.createUser(createUserInput);
   }
 
-  @Mutation(() => AuthUserSuccessEntity)
+  @Mutation(() => AuthUserSuccessEntity,{name:"signinUser"})
   async signinUser(@Args('signindata') createUserInput: CreateUserInput) {
     return this.authService.signInUser(createUserInput);
   }
