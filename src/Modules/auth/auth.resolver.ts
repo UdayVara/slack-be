@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { UserEntity } from './entity/user.entity';
 import { CreateUserInput } from './input/createUser.input';
 import { AuthUserSuccessEntity } from './entity/authUserSuccess.entity';
+import { VerifyOtpInput } from './input/verifyOtp.input';
+import { VerifyOtpSuccessEntity } from './entity/VerifyOtpSuccess.entity';
 
 @Resolver(() => UserEntity)
 export class AuthResolver {
@@ -16,6 +18,11 @@ export class AuthResolver {
   @Mutation(() => AuthUserSuccessEntity,{name:"signinUser"})
   async signinUser(@Args('signindata') createUserInput: CreateUserInput) {
     return this.authService.signInUser(createUserInput);
+  }
+
+  @Mutation(() => VerifyOtpSuccessEntity,{name:"verifyOtp"})
+  async verifyOtp(@Args("verifyData") body: VerifyOtpInput) {
+    return this.authService.verifyOtp(body);
   }
 
   @Query(() => UserEntity)

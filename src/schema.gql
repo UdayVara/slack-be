@@ -3,6 +3,7 @@
 # ------------------------------------------------------
 
 type AuthUserSuccessEntity {
+  email: String!
   message: String!
   statusCode: Float!
 }
@@ -16,6 +17,7 @@ input CreateUserInput {
 type Mutation {
   signinUser(signindata: CreateUserInput!): AuthUserSuccessEntity!
   signupUser(signupdata: CreateUserInput!): AuthUserSuccessEntity!
+  verifyOtp(verifyData: VerifyOtpInput!): VerifyOtpSuccessEntity!
 }
 
 """The platform enum from Prisma"""
@@ -35,4 +37,16 @@ type UserEntity {
   platform: Platform!
   username: String!
   verified: Boolean!
+}
+
+input VerifyOtpInput {
+  email: String!
+  otp: String!
+}
+
+type VerifyOtpSuccessEntity {
+  message: String!
+  statusCode: Float!
+  token: String!
+  user: UserEntity!
 }

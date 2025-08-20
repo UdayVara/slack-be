@@ -3,10 +3,12 @@ import { CreateUserInput } from './input/createUser.input';
 import { PrismaService } from 'src/common/Services/prisma.service';
 import { SigninUserInput } from './input/signinUser.input';
 import { MailService } from 'src/common/Services/mail.service';
+import { VerifyOtpInput } from './input/verifyOtp.input';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService,private readonly mailService:MailService) {}
+  constructor(private readonly prisma: PrismaService,private readonly mailService:MailService,private readonly jwtService:JwtService) {}
 
   async createUser(createUserInput: CreateUserInput) {
     try {
@@ -43,7 +45,7 @@ export class AuthService {
             }
         })
         this.mailService.sendOtpMail(user.email,user.username,otp)
-        return {statusCode:200,message:"OTP Sent Successfully"}
+        return {statusCode:201,message:"OTP Sent Successfully",email:user.email}
     } catch (error) {
         console.log("createUser",error)
         throw new InternalServerErrorException(error.message || "Something Went Wrong")
@@ -65,7 +67,7 @@ export class AuthService {
         if(checkUser){
             // otp send code here
 
-            return {statusCode:200,message:"OTP Sent Successfully"}
+            return {statusCode:201,message:"OTP Sent Successfully"}
         }else{
             throw new BadRequestException("User Not Found")
         }
@@ -74,4 +76,62 @@ export class AuthService {
         throw new InternalServerErrorException(error.message || "Internal server Error")
     }
   }
+
+  async verifyOtp(verifyOtpInput:VerifyOtpInput){
+    try {
+        const checkUser = await this.prisma.user.findFirst({
+            where:{
+                email:verifyOtpInput.email
+            }
+        })
+
+        if(checkUser){
+            // otp send code here
+            const otpData = await this.prisma.loginCodes.findFirst({
+                where:{
+                    userId:checkUser.id,
+                    isExpired:false
+                },
+                select:{
+                    code:true,
+                    id:true
+                },
+                orderBy:{
+                    createdAt:"desc"
+                }
+            })
+
+            if(otpData){
+                if(otpData.code == verifyOtpInput.otp){
+                    await this.prisma.loginCodes.update({
+                        where:{
+                            id:otpData.id
+                        },
+                        data:{
+                            isExpired:true
+                        }
+                    })
+                    await this.prisma.user.update({
+                        where:{
+                            id:checkUser.id
+                        },
+                        data:{
+                            verified:true
+                        }
+                    })   
+                    const token = this.jwtService.sign({id:checkUser.id})                 
+                    return {statusCode:201,message:"OTP Verified Successfully",user:checkUser,token:token}
+                }else{
+                    throw new BadRequestException("Invalid OTP")
+                }
+            }else{
+                throw new BadRequestException("OTP Not Found")
+            }
+        }else{
+            throw new BadRequestException("User Not Found")
+        }
+    } catch (error) {
+        console.log("verifyOtp",error)
+        throw new InternalServerErrorException(error.message || "Internal server Error")
+    }}
 }

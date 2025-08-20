@@ -9,4 +9,7 @@ export class AuthUserSuccessEntity {
     @Field(()=>String)
     message:string;
 
+    @Field(()=>String)
+    email:string;
+
 }
