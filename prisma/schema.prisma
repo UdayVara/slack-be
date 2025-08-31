@@ -35,6 +35,8 @@ model user {
   updatedAt          DateTime             @default(now())
   userSessionDevices userSessionDevices[]
   loginCodes         loginCodes[]
+  workspace          workspace[]
+  workspaceUsers     workspaceUsers[]
 }
 
 model userSessionDevices {
@@ -56,4 +58,28 @@ model loginCodes {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   isExpired Boolean  @default(false)
+}
+
+model workspace {
+  id             String           @id @default(uuid())
+  name           String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @default(now())
+  user           user             @relation(fields: [createdBy], references: [id])
+  createdBy      String
+  workspaceUsers workspaceUsers[]
+
+  @@unique([createdBy,name],name:"workspace_name_unique")
+}
+
+model workspaceUsers {
+  id          String    @id @default(uuid())
+  workspace   workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+  user        user      @relation(fields: [userId], references: [id])
+  userId      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+
+  @@unique([workspaceId,userId],name:"workspace_user_unique")
 }
