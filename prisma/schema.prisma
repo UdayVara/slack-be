@@ -20,6 +20,11 @@ enum platform {
   default
 }
 
+enum workspaceUsersRole {
+  guest
+  member
+}
+
 enum activeStatus {
   loggedout
   active
@@ -69,17 +74,20 @@ model workspace {
   createdBy      String
   workspaceUsers workspaceUsers[]
 
-  @@unique([createdBy,name],name:"workspace_name_unique")
+  @@unique([createdBy, name], name: "workspace_name_unique")
 }
 
 model workspaceUsers {
-  id          String    @id @default(uuid())
-  workspace   workspace @relation(fields: [workspaceId], references: [id])
+  id          String             @id @default(uuid())
+  workspace   workspace          @relation(fields: [workspaceId], references: [id])
   workspaceId String
-  user        user      @relation(fields: [userId], references: [id])
+  user        user               @relation(fields: [userId], references: [id])
   userId      String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
+  role        workspaceUsersRole @default(guest)
+  joinedAt    DateTime           @default(now())
+  isActive    Boolean            @default(true)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @default(now())
 
-  @@unique([workspaceId,userId],name:"workspace_user_unique")
+  @@unique([workspaceId, userId], name: "workspace_user_unique")
 }
