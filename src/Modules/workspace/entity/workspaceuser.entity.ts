@@ -3,7 +3,7 @@ import { WorkspaceEntity } from "./workspace.entity";
 import { UserEntity } from "src/Modules/auth/entity/user.entity";
 import { WorkspaceUsersRole } from "../enum/workspace.userrole.enum";
 
-ObjectType()
+@ObjectType()
 export class WorkspaceUser {
 
     @Field(()=>String)

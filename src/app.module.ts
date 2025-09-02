@@ -7,11 +7,13 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { AuthModule } from './Modules/auth/auth.module';
+import { WorkspaceModule } from './Modules/workspace/workspace.module';
 
 @Module({
   imports: [
     CommonModule,
     AuthModule,
+    WorkspaceModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),

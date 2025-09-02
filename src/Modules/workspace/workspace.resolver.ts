@@ -16,12 +16,12 @@ export class WorkspaceResolver {
     return this.workspaceService.getUserWorkspaces(req?.user?.id || null)
   }
 
-  @ResolveField(()=>UserEntity)
+  @ResolveField("user")
   user(@Parent() workspaceUser:WorkspaceUser){
     return workspaceUser.user
   }
 
-  @ResolveField(()=>WorkspaceEntity)
+  @ResolveField("workspace")
   workspace(@Parent() workspaceUser:WorkspaceUser){
     return workspaceUser.workspace
   }

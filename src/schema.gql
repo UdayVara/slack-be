@@ -14,6 +14,11 @@ input CreateUserInput {
   username: String!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Mutation {
   signinUser(signindata: CreateUserInput!): AuthUserSuccessEntity!
   signupUser(signupdata: CreateUserInput!): AuthUserSuccessEntity!
@@ -29,6 +34,7 @@ enum Platform {
 
 type Query {
   getUser: UserEntity!
+  getWorkspace: [WorkspaceUser!]!
 }
 
 type UserEntity {
@@ -49,4 +55,32 @@ type VerifyOtpSuccessEntity {
   statusCode: Float!
   token: String!
   user: UserEntity!
+}
+
+type WorkspaceEntity {
+  createdBy: String!
+  createdDate: DateTime!
+  id: String!
+  name: String!
+  updatedDate: DateTime!
+  user: UserEntity!
+}
+
+type WorkspaceUser {
+  createdAt: DateTime!
+  id: String!
+  isActive: Boolean!
+  joinedAt: DateTime!
+  role: WorkspaceUserRole!
+  updatedAt: DateTime!
+  user: UserEntity!
+  userId: String!
+  workspace: WorkspaceEntity!
+  workspaceId: String!
+}
+
+"""The platform enum from Prisma"""
+enum WorkspaceUserRole {
+  guest
+  member
 }
