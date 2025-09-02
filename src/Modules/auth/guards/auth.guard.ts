@@ -10,12 +10,11 @@ export class GqlAuthGuard implements CanActivate {
     const ctx = GqlExecutionContext.create(context);
     const req = ctx.getContext().req;
     const authHeader = req.headers.authorization;
-
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       throw new UnauthorizedException('Missing or invalid Authorization header');
     }
 
-    const token = authHeader.split(' ')[1];
+    const token = authHeader.replace('Bearer ', '');
     try {
       const decoded = this.jwtService.verify(token, {
         secret: process.env.JWT_SECRET, // or any secret key you're using

@@ -1,4 +1,4 @@
-import { Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Context, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { WorkspaceService } from './workspace.service';
 import { WorkspaceUser } from './entity/workspaceuser.entity';
 import { Request, UseGuards } from '@nestjs/common';
@@ -12,8 +12,8 @@ export class WorkspaceResolver {
   constructor(private readonly workspaceService: WorkspaceService) {}
 
   @Query(()=>[WorkspaceUser])
-  getWorkspace(@Request() req:any){
-    return this.workspaceService.getUserWorkspaces(req?.user?.id || null)
+  getWorkspace(@Context() context : any){
+    return this.workspaceService.getUserWorkspaces(context?.req?.user?.id || null)
   }
 
   @ResolveField("user")
