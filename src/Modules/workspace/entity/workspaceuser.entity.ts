@@ -4,7 +4,7 @@ import { UserEntity } from "src/Modules/auth/entity/user.entity";
 import { WorkspaceUsersRole } from "../enum/workspace.userrole.enum";
 
 ObjectType()
-export class workspaceUser {
+export class WorkspaceUser {
 
     @Field(()=>String)
     id:string;
