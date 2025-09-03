@@ -1,16 +1,16 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { CreateUserInput } from './input/createUser.input';
 import { PrismaService } from 'src/common/Services/prisma.service';
-import { SigninUserInput } from './input/signinUser.input';
 import { MailService } from 'src/common/Services/mail.service';
-import { VerifyOtpInput } from './input/verifyOtp.input';
+import { VerifyOtpDto } from './DTO/verifyOtp.dto';
 import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from './DTO/createUser.dto';
+import { SigninUserDto } from './DTO/signinUser.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly prisma: PrismaService,private readonly mailService:MailService,private readonly jwtService:JwtService) {}
 
-  async createUser(createUserInput: CreateUserInput) {
+  async createUser(createUserInput: CreateUserDto) {
     try {
 
         const existingUser = await this.prisma.user.findFirst({
@@ -56,7 +56,7 @@ export class AuthService {
     return this.prisma.user.findFirst()
   }
 
-  async signInUser(signinUserInput:SigninUserInput){
+  async signInUser(signinUserInput:SigninUserDto){
     try {
         const checkUser = await this.prisma.user.findFirst({
             where:{
@@ -77,7 +77,7 @@ export class AuthService {
     }
   }
 
-  async verifyOtp(verifyOtpInput:VerifyOtpInput){
+  async verifyOtp(verifyOtpInput:VerifyOtpDto){
     try {
         const checkUser = await this.prisma.user.findFirst({
             where:{
