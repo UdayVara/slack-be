@@ -1,14 +1,15 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/common/Services/prisma.service';
-import { MailService } from 'src/common/Services/mail.service';
 import { VerifyOtpDto } from './dto/verifyOtp.dto';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dto/createUser.dto';
 import { SigninUserDto } from './dto/signinUser.dto';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService,private readonly mailService:MailService,private readonly jwtService:JwtService) {}
+  constructor(private readonly prisma: PrismaService,private readonly jwtService:JwtService,@InjectQueue("email") private readonly emailQueue:Queue) {}
 
   async createUser(createUserInput: CreateUserDto) {
     try {
@@ -34,17 +35,9 @@ export class AuthService {
             }
         })
 
-        // otp send code here
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-        await this.prisma.loginCodes.create({
-            data:{
-                code:otp,
-                userId:user.id,
-                isExpired:false
-            }
+        await this.emailQueue.add('',{
+           user:user
         })
-        this.mailService.sendOtpMail(user.email,user.username,otp)
         return {statusCode:201,message:"OTP Sent Successfully",email:user.email}
     } catch (error) {
         console.log("createUser",error)
