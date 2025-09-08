@@ -23,6 +23,7 @@ enum platform {
 enum workspaceUsersRole {
   guest
   member
+  owner
 }
 
 enum activeStatus {
