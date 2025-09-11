@@ -28,7 +28,7 @@ export class WorkspaceService {
     }
 }
 
-    async getWorkspaceUser(userId:string){
+    async getWorkSpaceList(userId:string){
         try{
             const res =  this.prisma.workspaceUsers.findMany({
                 where:{
@@ -36,6 +36,7 @@ export class WorkspaceService {
                 },
                 include:{
                     workspace:true,
+                    user:true
                 }
             })
 
@@ -118,11 +119,12 @@ export class WorkspaceService {
         }
     }
 
-    async transferOwnership(transferOwnershipDto:TransferOwnershipDto,userId:string){
+    async transferOwnership(transferOwnershipDto:TransferOwnershipDto,workspaceId:string,userId:string){
         try {
             const res = await this.prisma.workspaceUsers.findFirst({
                 where:{
                     id:transferOwnershipDto.workspaceMemberId,
+                    workspaceId:workspaceId,
                     role:workspaceUsersRole.owner,
                     userId:userId
                 }
