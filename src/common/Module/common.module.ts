@@ -4,6 +4,7 @@ import { MailService } from '../Services/mail.service';
 import { JwtModule } from '@nestjs/jwt';
 import { BullModule } from '@nestjs/bullmq';
 import { EmailProcessor } from 'src/Processors/email.processor';
+import { CloudinaryService } from '../Services/cloudinary.service';
 
 @Global()
 @Module({
@@ -23,7 +24,7 @@ import { EmailProcessor } from 'src/Processors/email.processor';
         
       }),],
   
-  providers: [PrismaService,MailService,EmailProcessor],
-  exports: [PrismaService,MailService,BullModule],
+  providers: [PrismaService,MailService,CloudinaryService,EmailProcessor],
+  exports: [PrismaService,MailService,CloudinaryService,BullModule],
 })
 export class CommonModule {}

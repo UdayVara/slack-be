@@ -71,6 +71,7 @@ model workspace {
   name           String
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @default(now())
+  workspaceImage String
   user           user             @relation(fields: [createdBy], references: [id])
   createdBy      String
   workspaceUsers workspaceUsers[]

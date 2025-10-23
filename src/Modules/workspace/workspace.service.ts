@@ -3,17 +3,20 @@ import { PrismaService } from 'src/common/Services/prisma.service';
 import { CreateWorkspceDto } from './dto/createWorkspace.dto';
 import { workspaceUsersRole } from 'generated/prisma';
 import { TransferOwnershipDto } from './dto/transferOwnership.dto';
+import { CloudinaryService } from 'src/common/Services/cloudinary.service';
 
 @Injectable()
 export class WorkspaceService {
-    constructor(private readonly prisma: PrismaService){}
+    constructor(private readonly prisma: PrismaService,private readonly cloudinary:CloudinaryService){}
 
-    async createWorkspace(createWorkspaceDto: CreateWorkspceDto,userId:string) {
+    async createWorkspace(createWorkspaceDto: CreateWorkspceDto,file:Express.Multer.File,userId:string) {
         try{
+        const imageUploadData = await this.cloudinary.uploadImage(file,"workspaces")
         const res = await this.prisma.workspace.create({
             data: {
                 name: createWorkspaceDto.name,
                 createdBy: userId,
+                workspaceImage:imageUploadData.secure_url
             },
         });
 

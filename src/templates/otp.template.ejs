@@ -24,6 +24,11 @@
               <td align="center" style="padding:20px 0;">
                 <div style="display:inline-block; background-color:#e8f5fd; border-radius:6px; padding:20px 40px; font-size:32px; font-weight:700; color:#1264a3; letter-spacing:2px;">
                   <%= otp %>
+                  <br />
+                  <span onclick="copyToClipboard()" style="font-size:16px; color:#1d1c1d; padding-top:20px;">click to copy</span>
+                </div>
+                <div style="font-size:16px; color:#1d1c1d; padding-top:20px;">
+                  This code will expire in 10 minutes.
                 </div>
               </td>
             </tr>
@@ -48,5 +53,10 @@
         </td>
       </tr>
     </table>
+    <script>
+      function copyToClipboard() {
+        navigator.clipboard.writeText('<%= otp %>');
+      }
+    </script>
   </body>
 </html>
