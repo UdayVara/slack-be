@@ -4,7 +4,7 @@ import { CreateWorkspceDto } from './dto/createWorkspace.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { TransferOwnershipDto } from './dto/transferOwnership.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 
 @Controller('workspace')
 @ApiBearerAuth('jwt') 
@@ -13,6 +13,8 @@ export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}
 
   @Post()
+  @ApiOperation({summary:"API used to create Workspace"})
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor("workspaceImage"))
   async createWorkSpace(@Body() createWorkspceDtoBody:CreateWorkspceDto,@Request() req:any,@UploadedFile(  new ParseFilePipe({
     validators: [
