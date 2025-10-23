@@ -45,9 +45,6 @@ export class AuthService {
     }
   }
 
-  async getUser(){
-    return this.prisma.user.findFirst()
-  }
 
   async signInUser(signinUserInput:SigninUserDto){
     try {
