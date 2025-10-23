@@ -4,8 +4,10 @@ import { CreateWorkspceDto } from './dto/createWorkspace.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { TransferOwnershipDto } from './dto/transferOwnership.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('workspace')
+@ApiBearerAuth('jwt') 
 @UseGuards(AuthGuard)
 export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}

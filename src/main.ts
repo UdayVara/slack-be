@@ -13,6 +13,17 @@ async function bootstrap() {
     .setTitle('Slack Clone API')
     .setDescription('The Slack Clone API description')
     .setVersion('1.0')
+    .addBearerAuth(
+      { 
+        type: 'http', 
+        scheme: 'bearer', 
+        bearerFormat: 'JWT', 
+        name: 'JWT', 
+        description: 'Enter JWT token', 
+        in: 'header',
+      },
+      'jwt' // This is an arbitrary name for your security scheme
+    )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);
