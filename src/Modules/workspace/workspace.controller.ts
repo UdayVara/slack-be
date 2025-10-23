@@ -4,7 +4,7 @@ import { CreateWorkspceDto } from './dto/createWorkspace.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { TransferOwnershipDto } from './dto/transferOwnership.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth,  ApiConsumes, ApiOperation } from '@nestjs/swagger';
 
 @Controller('workspace')
 @ApiBearerAuth('jwt') 
@@ -26,22 +26,27 @@ export class WorkspaceController {
   }
 
   @Get()
+  @ApiOperation({summary:"This API is Used to get list of all workspaces that user created or belongs"})
   async getWorkspaceList(@Req() req:any){
     return await this.workspaceService.getWorkSpaceList(req?.user?.id)
   }
 
   @Put(":id")
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({summary:"Update Workspace by ID"})
   async updateWorkspaceList(@Param("id",ParseUUIDPipe) id:string,@Body() updateWorkspaceBody:CreateWorkspceDto,@Req() req:any){
     return await this.workspaceService.updateWorkspace(id,updateWorkspaceBody,req?.user?.id)
   }
 
   @Post("/transfer/:id")
+  @ApiOperation({summary:"This API Used to transfer Workspace Ownership"})
   async transferWorkspace(@Param("id",ParseUUIDPipe) workspaceId:string,@Body() TransferOwnershipDtoBody:TransferOwnershipDto,@Req() req:any){
     return this.workspaceService.transferOwnership(TransferOwnershipDtoBody,workspaceId,req?.user?.id || null)
   }
 
   
   @Post("/leave/:id")
+  @ApiOperation({summary:"This API Used to Leave Workspace "})
   async leaveWorkspace(@Param("id",ParseUUIDPipe) workspaceId:string, @Req() req:any){
     return await this.workspaceService.leaveWorkspace(workspaceId,req?.user?.id || null)
   }
