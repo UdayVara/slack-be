@@ -19,7 +19,14 @@ export class WorkspaceService {
                 workspaceImage:imageUploadData.secure_url
             },
         });
-
+        await this.prisma.workspaceUsers.create({
+            data: {
+                workspaceId: res.id,
+                userId: userId,
+                role: workspaceUsersRole.owner,
+                isActive: true
+            },
+        })
         if(res){
             return {statusCode:201,message:"Workspace Created Successfully",data:res}
         }else{
@@ -33,7 +40,7 @@ export class WorkspaceService {
 
     async getWorkSpaceList(userId:string){
         try{
-            const res =  this.prisma.workspaceUsers.findMany({
+            const res =  await this.prisma.workspaceUsers.findMany({
                 where:{
                     userId:userId
                 },
